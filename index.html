@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#FAFAFA">
+<title>MarketLab — Aktien-Analyse fuer Privatanleger</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#FAFAFA;--s:#FFF;--s2:#F5F5F7;--b:#E8E8EB;--t:#1A1A1F;--t2:#6E6E73;--t3:#AEAEB2;--t4:#D1D1D6;--a:#0066CC;--abg:#EBF5FF;--g:#16A34A;--gbg:#F0FDF4;--r:#DC2626;--f:'DM Sans',-apple-system,sans-serif;--m:'JetBrains Mono',monospace}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:var(--f);color:var(--t);background:var(--bg);-webkit-font-smoothing:antialiased}
+::selection{background:var(--a);color:#fff}
+a{color:var(--a);text-decoration:none}
+img{max-width:100%}
+
+/* NAV */
+.nav{position:fixed;top:0;left:0;right:0;height:56px;background:rgba(250,250,250,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-bottom:0.5px solid var(--b);z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 24px;max-width:100%}
+.nav-logo{display:flex;align-items:center;gap:8px}
+.nav-logo img{width:28px;height:28px;border-radius:7px;object-fit:cover}
+.nav-logo span{font-size:16px;font-weight:800;letter-spacing:-.3px}
+.nav-links{display:flex;gap:20px;align-items:center}
+.nav-links a{font-size:13px;font-weight:600;color:var(--t2)}
+.nav-links a:hover{color:var(--t)}
+.nav-cta{padding:8px 18px;background:var(--t);color:#fff;border-radius:8px;font-size:13px;font-weight:700;border:none;cursor:pointer;font-family:var(--f)}
+@media(max-width:640px){.nav-links a:not(.nav-cta){display:none}}
+
+/* HERO */
+.hero{padding:120px 24px 60px;text-align:center;max-width:680px;margin:0 auto;position:relative}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:4px 12px 4px 4px;background:var(--gbg);border:1px solid #16A34A30;border-radius:20px;font-size:11px;font-weight:600;color:var(--g);margin-bottom:20px}
+.hero-badge span{background:var(--g);color:#fff;padding:2px 6px;border-radius:12px;font-size:9px}
+.hero h1{font-size:clamp(34px,6vw,54px);font-weight:800;line-height:1.08;letter-spacing:-1.5px;margin-bottom:14px}
+.hero h1 em{font-style:normal;color:var(--a)}
+.hero p{font-size:clamp(15px,2.2vw,18px);color:var(--t2);line-height:1.6;max-width:500px;margin:0 auto 28px}
+.hero-btns{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.btn{padding:14px 32px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;font-family:var(--f);border:none;transition:all 0.15s;display:inline-flex;align-items:center;gap:6px}
+.btn:active{transform:scale(0.97)}
+.btn-p{background:var(--a);color:#fff;box-shadow:0 4px 14px rgba(0,102,204,0.25)}
+.btn-p:hover{box-shadow:0 6px 20px rgba(0,102,204,0.35)}
+.btn-s{background:var(--s);color:var(--t);border:1.5px solid var(--b)}
+.btn-s:hover{border-color:var(--t3)}
+.btn-sm{padding:10px 20px;font-size:13px}
+
+/* STATS */
+.stats{display:flex;gap:32px;justify-content:center;margin-top:40px;flex-wrap:wrap}
+.stat-n{font-size:32px;font-weight:800;font-family:var(--m)}
+.stat-l{font-size:12px;color:var(--t3);margin-top:2px}
+
+/* TRUST */
+.trust{text-align:center;padding:32px 24px;color:var(--t4);font-size:12px;font-weight:500}
+
+/* SECTION */
+.section{padding:80px 24px;max-width:960px;margin:0 auto}
+.section-sm{max-width:720px}
+.sec-label{font-size:11px;font-weight:700;color:var(--a);letter-spacing:1.5px;text-transform:uppercase;text-align:center;margin-bottom:8px}
+.sec-title{font-size:clamp(26px,4vw,36px);font-weight:800;text-align:center;letter-spacing:-.5px;margin-bottom:8px}
+.sec-sub{font-size:15px;color:var(--t2);text-align:center;max-width:520px;margin:0 auto 40px;line-height:1.6}
+
+/* FEATURES */
+.feat-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}
+.feat{padding:24px;background:var(--s);border:1px solid var(--b);border-radius:16px;transition:all 0.2s}
+.feat:hover{box-shadow:0 8px 28px rgba(0,0,0,0.04);transform:translateY(-2px)}
+.feat-ic{width:44px;height:44px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.feat h3{font-size:16px;font-weight:700;margin-bottom:4px}
+.feat p{font-size:13px;color:var(--t2);line-height:1.6}
+
+/* HOW */
+.how-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:16px;counter-reset:step}
+.how-step{text-align:center;padding:24px 16px;background:var(--s);border:1px solid var(--b);border-radius:16px;position:relative}
+.how-step::before{counter-increment:step;content:counter(step);width:28px;height:28px;border-radius:50%;background:var(--a);color:#fff;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;margin:0 auto 12px}
+.how-step h3{font-size:14px;font-weight:700;margin-bottom:4px}
+.how-step p{font-size:12px;color:var(--t2);line-height:1.5}
+
+/* WOW FEATURE */
+.wow{padding:60px 24px;background:linear-gradient(135deg,#0066CC08,#16A34A06);border-top:1px solid var(--b);border-bottom:1px solid var(--b)}
+.wow-inner{max-width:720px;margin:0 auto;text-align:center}
+.wow-card{background:var(--s);border:2px solid var(--a)20;border-radius:20px;padding:32px;margin-top:24px;box-shadow:0 8px 32px rgba(0,102,204,0.06)}
+
+/* PRICING */
+.price-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px;max-width:840px;margin:0 auto}
+.price{padding:28px 24px;border:1.5px solid var(--b);border-radius:16px;background:var(--s);position:relative;transition:all 0.2s}
+.price:hover{box-shadow:0 8px 28px rgba(0,0,0,0.04)}
+.price.pop{border-color:var(--a);background:var(--abg)}
+.price-pop{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--a);color:#fff;font-size:10px;font-weight:700;padding:3px 14px;border-radius:12px;letter-spacing:.5px}
+.price-name{font-size:14px;font-weight:700;color:var(--t2)}
+.price-val{font-size:36px;font-weight:800;font-family:var(--m);margin:8px 0 2px}
+.price-per{font-size:12px;color:var(--t3)}
+.price-list{margin-top:18px;list-style:none}
+.price-list li{font-size:13px;color:var(--t2);padding:7px 0;border-bottom:1px solid var(--b);display:flex;gap:6px}
+.price-list li:last-child{border:none}
+.price-list .ck{color:var(--g);font-weight:700;flex-shrink:0}
+.price-list .no{color:var(--t4)}
+
+/* FAQ */
+.faq{max-width:640px;margin:0 auto}
+.faq-item{border-bottom:1px solid var(--b);padding:18px 0;cursor:pointer}
+.faq-q{font-size:15px;font-weight:700;display:flex;justify-content:space-between;align-items:center}
+.faq-q::after{content:"+";font-size:20px;color:var(--t3);transition:transform 0.2s}
+.faq-item.open .faq-q::after{transform:rotate(45deg)}
+.faq-a{font-size:13px;color:var(--t2);line-height:1.7;max-height:0;overflow:hidden;transition:max-height 0.3s,padding 0.3s;padding-top:0}
+.faq-item.open .faq-a{max-height:200px;padding-top:10px}
+
+/* CTA */
+.cta-section{padding:80px 24px;text-align:center;background:var(--t);color:#fff;border-radius:0}
+.cta-section h2{font-size:32px;font-weight:800;margin-bottom:8px}
+.cta-section p{font-size:15px;color:#999;margin-bottom:24px}
+
+/* FOOTER */
+footer{padding:40px 24px;text-align:center;border-top:1px solid var(--b)}
+footer p{font-size:11px;color:var(--t4);line-height:1.8}
+
+/* MODAL */
+.modal-bg{position:fixed;inset:0;background:rgba(0,0,0,0.4);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);z-index:300;display:none;align-items:center;justify-content:center;padding:20px}
+.modal-bg.on{display:flex}
+.modal{background:var(--s);border-radius:20px;max-width:380px;width:100%;padding:32px 28px;box-shadow:0 24px 64px rgba(0,0,0,0.15);animation:modalIn 0.25s ease-out;position:relative}
+@keyframes modalIn{from{opacity:0;transform:translateY(20px) scale(0.97)}to{opacity:1;transform:none}}
+.modal-close{position:absolute;top:14px;right:14px;background:var(--s2);border:none;width:28px;height:28px;border-radius:50%;font-size:14px;cursor:pointer;color:var(--t3);display:flex;align-items:center;justify-content:center}
+.modal h2{font-size:22px;font-weight:800;margin-bottom:3px}
+.modal .sub{font-size:13px;color:var(--t2);margin-bottom:18px}
+.inp{width:100%;padding:12px 14px;border:1.5px solid var(--b);border-radius:10px;font-size:15px;font-family:var(--f);outline:none;background:var(--s2);color:var(--t);margin-bottom:10px;transition:border-color 0.15s}
+.inp:focus{border-color:var(--a);box-shadow:0 0 0 3px rgba(0,102,204,0.08)}
+.inp::placeholder{color:var(--t4)}
+.social-btn{width:100%;padding:12px;border:1.5px solid var(--b);border-radius:10px;background:var(--s);font-size:14px;font-weight:600;cursor:pointer;font-family:var(--f);display:flex;align-items:center;justify-content:center;gap:8px;margin-bottom:7px;transition:all 0.12s}
+.social-btn:hover{background:var(--s2);border-color:var(--t3)}
+.divider{display:flex;align-items:center;gap:12px;margin:14px 0;color:var(--t4);font-size:12px}
+.divider::before,.divider::after{content:"";flex:1;height:1px;background:var(--b)}
+.link{color:var(--a);font-weight:600;cursor:pointer}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">
+    <img src="https://raw.githubusercontent.com/thierrymatarework-cpu/investlab/main/fox.jpeg" alt="MarketLab">
+    <span>MarketLab</span>
+  </div>
+  <div class="nav-links">
+    <a href="#features">Features</a>
+    <a href="#pricing">Preise</a>
+    <a href="#faq">FAQ</a>
+    <button class="nav-cta" onclick="openModal('signup')">Kostenlos starten</button>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge"><span>NEU</span> AI Portfolio X-Ray jetzt verfuegbar</div>
+  <h1>Aktien-Analyse.<br><em>Intelligent.</em><br>Persoenlich.</h1>
+  <p>Professionelle Analyse, personalisierte Signale und ein AI-Analyst der dein Portfolio versteht. Entwickelt fuer europaeische Privatanleger.</p>
+  <div class="hero-btns">
+    <button class="btn btn-p" onclick="openModal('signup')">Kostenlos starten</button>
+    <button class="btn btn-s" onclick="openModal('login')">Anmelden</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="stat-n" style="color:var(--a)">8+</div><div class="stat-l">DAX-Aktien analysiert</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--g)">91</div><div class="stat-l">Hoechster AI-Score</div></div>
+    <div class="stat"><div class="stat-n">24/7</div><div class="stat-l">Echtzeit-Daten</div></div>
+    <div class="stat"><div class="stat-n" style="color:var(--g)">4</div><div class="stat-l">Strong-Buy Signale</div></div>
+  </div>
+</section>
+
+<div class="trust">Vertraut von ueber 1.000 Privatanlegern in Deutschland, Oesterreich und der Schweiz</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="sec-label">Features</div>
+  <div class="sec-title">Alles was du brauchst. In einer App.</div>
+  <div class="sec-sub">Kein Wechsel mehr zwischen 5 verschiedenen Tools. MarketLab vereint alles an einem Ort.</div>
+  <div class="feat-grid">
+    <div class="feat"><div class="feat-ic" style="background:var(--abg);color:var(--a)">&#9678;</div><h3>Live-Marktdaten</h3><p>Echtzeit-Kurse aller DAX-Aktien. Indizes, Waehrungen, Rohstoffe. Immer aktuell, nie verzogert.</p></div>
+    <div class="feat"><div class="feat-ic" style="background:var(--gbg);color:var(--g)">&#9651;</div><h3>AI-Signale</h3><p>Personalisierte Kauf- und Verkaufssignale basierend auf deinem Risikoprofil. Keine generischen Tipps.</p></div>
+    <div class="feat"><div class="feat-ic" style="background:#FEF2F2;color:var(--r)">&#9671;</div><h3>Risikobewertung</h3><p>Fuer jede Aktie: Risk-Meter, Analysten-Konsens, Katalysatoren und einzelne Risikofaktoren visualisiert.</p></div>
+    <div class="feat"><div class="feat-ic" style="background:#FEFCE8;color:var(--o)">&#9655;</div><h3>AI-Analyst Chat</h3><p>Frag alles in natuerlicher Sprache. "Vergleiche BMW vs Mercedes." Sofort datenbasierte Antworten.</p></div>
+    <div class="feat"><div class="feat-ic" style="background:#F5F3FF;color:#9333EA">&#8862;</div><h3>Smart Screener</h3><p>Finde unterbewertete Aktien mit Filtern: KGV, Dividende, RSI, Sektor, Performance. Alles kombinierbar.</p></div>
+    <div class="feat"><div class="feat-ic" style="background:var(--s2);color:var(--t)">&#9675;</div><h3>Portfolio X-Ray</h3><p>Lade dein Portfolio. Die AI analysiert Klumpenrisiken, fehlende Diversifikation und gibt konkrete Optimierungsvorschlaege.</p></div>
+    <div class="feat"><div class="feat-ic" style="background:var(--abg);color:var(--a)">&#9881;</div><h3>Smart Alerts</h3><p>Definiere eigene Regeln: "Benachrichtige mich wenn BMW unter 80 faellt" oder "Wenn RSI unter 30." Push-Benachrichtigung sofort.</p></div>
+    <div class="feat"><div class="feat-ic" style="background:var(--gbg);color:var(--g)">&#9733;</div><h3>Earnings & Events</h3><p>Quartalszahlen, Dividenden-Termine, EZB-Entscheide. Nie wieder einen wichtigen Termin verpassen.</p></div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section section-sm">
+  <div class="sec-label">So funktioniert es</div>
+  <div class="sec-title">In 2 Minuten startklar</div>
+  <div class="sec-sub">Kein kompliziertes Setup. Keine Programmierung. Sofort loslegen.</div>
+  <div class="how-grid">
+    <div class="how-step"><h3>Profil erstellen</h3><p>10 schnelle Fragen. Unser AI-Assistent Finley lernt deinen Anlagetyp kennen.</p></div>
+    <div class="how-step"><h3>Signale erhalten</h3><p>Personalisierte Empfehlungen basierend auf deinem Risikoprofil und deinen Interessen.</p></div>
+    <div class="how-step"><h3>Analysieren</h3><p>Tiefe Analysen mit Kennzahlen, Charts, Risikobewertung und AI-Einschaetzung.</p></div>
+    <div class="how-step"><h3>Handeln</h3><p>Direkt bei deinem Broker kaufen. Wir verbinden uns mit Trade Republic, Scalable und mehr.</p></div>
+  </div>
+</section>
+
+<!-- WOW FEATURE -->
+<section class="wow" id="xray">
+  <div class="wow-inner">
+    <div class="sec-label">Exklusiv</div>
+    <div class="sec-title">AI Portfolio X-Ray</div>
+    <div class="sec-sub">Das Feature, das alles veraendert. Lade dein Portfolio und erhalte in Sekunden eine vollstaendige AI-Analyse.</div>
+    <div class="wow-card">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;text-align:left">
+        <div><div style="font-size:11px;font-weight:700;color:var(--a);margin-bottom:6px">DIVERSIFIKATION</div><p style="font-size:13px;color:var(--t2);line-height:1.6">"Dein Portfolio ist zu 68% in Automobil-Aktien. Das ist ein erhebliches Klumpenrisiko. Empfehlung: Healthcare oder Tech beimischen."</p></div>
+        <div><div style="font-size:11px;font-weight:700;color:var(--g);margin-bottom:6px">OPTIMIERUNG</div><p style="font-size:13px;color:var(--t2);line-height:1.6">"Deine Dividendenrendite liegt bei 4,2%. Mit einem Tausch von SAP gegen Munich Re steigt sie auf 5,1% ohne Risikoanstieg."</p></div>
+        <div><div style="font-size:11px;font-weight:700;color:var(--r);margin-bottom:6px">RISIKO-CHECK</div><p style="font-size:13px;color:var(--t2);line-height:1.6">"Bei einem DAX-Crash von -20% wuerde dein Portfolio circa -26% verlieren. Du bist ueberdurchschnittlich exponiert."</p></div>
+        <div><div style="font-size:11px;font-weight:700;color:#9333EA;margin-bottom:6px">KORRELATION</div><p style="font-size:13px;color:var(--t2);line-height:1.6">"BMW und Mercedes korrelieren zu 89%. Beide zu halten verdoppelt dein Autobranche-Risiko ohne Diversifikationseffekt."</p></div>
+      </div>
+      <button class="btn btn-p" style="margin-top:20px" onclick="openModal('signup')">Portfolio X-Ray testen</button>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section" id="pricing">
+  <div class="sec-label">Preise</div>
+  <div class="sec-title">Einfach. Transparent. Fair.</div>
+  <div class="sec-sub">Starte kostenlos. Upgrade wenn du bereit bist.</div>
+  <div class="price-grid">
+    <div class="price">
+      <div class="price-name">Free</div>
+      <div class="price-val">0 &euro;</div>
+      <div class="price-per">fuer immer</div>
+      <ul class="price-list">
+        <li><span class="ck">+</span> Marktuebersicht mit Live-Daten</li>
+        <li><span class="ck">+</span> 3 Aktien-Analysen pro Tag</li>
+        <li><span class="ck">+</span> 5 AI-Chat Fragen pro Tag</li>
+        <li><span class="ck">+</span> Basis-News und Signale</li>
+        <li><span class="no">-</span> <span style="color:var(--t4)">Keine Alerts</span></li>
+        <li><span class="no">-</span> <span style="color:var(--t4)">Kein Portfolio X-Ray</span></li>
+      </ul>
+      <button class="btn btn-s btn-sm" style="width:100%;margin-top:16px" onclick="openModal('signup')">Kostenlos starten</button>
+    </div>
+    <div class="price pop">
+      <div class="price-pop">BELIEBT</div>
+      <div class="price-name">Premium</div>
+      <div class="price-val">14,99 &euro;</div>
+      <div class="price-per">pro Monat</div>
+      <ul class="price-list">
+        <li><span class="ck">+</span> Alles aus Free</li>
+        <li><span class="ck">+</span> Unbegrenzte Analysen</li>
+        <li><span class="ck">+</span> Woechentlicher personalisierter Report</li>
+        <li><span class="ck">+</span> Echtzeit-Alerts (unbegrenzt)</li>
+        <li><span class="ck">+</span> Portfolio X-Ray (1x pro Woche)</li>
+        <li><span class="ck">+</span> Unbegrenzter AI-Analyst</li>
+        <li><span class="ck">+</span> Portfolio-Tracking + Broker-Sync</li>
+        <li><span class="ck">+</span> Earnings & Events Kalender</li>
+      </ul>
+      <button class="btn btn-p btn-sm" style="width:100%;margin-top:16px" onclick="openModal('signup')">14 Tage kostenlos testen</button>
+    </div>
+    <div class="price">
+      <div class="price-name">Concierge</div>
+      <div class="price-val">49,99 &euro;</div>
+      <div class="price-per">pro Monat</div>
+      <ul class="price-list">
+        <li><span class="ck">+</span> Alles aus Premium</li>
+        <li><span class="ck">+</span> Taegliches Morgen-Briefing um 7:30</li>
+        <li><span class="ck">+</span> Monatlicher Portfolio-Review durch AI</li>
+        <li><span class="ck">+</span> Portfolio X-Ray (taeglich)</li>
+        <li><span class="ck">+</span> Deep-Dive Reports (woechentlich)</li>
+        <li><span class="ck">+</span> Priority AI mit erweiterten Daten</li>
+        <li><span class="ck">+</span> Exklusive Contrarian-Signale</li>
+      </ul>
+      <button class="btn btn-s btn-sm" style="width:100%;margin-top:16px" onclick="openModal('signup')">Starten</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section section-sm" id="faq">
+  <div class="sec-label">FAQ</div>
+  <div class="sec-title">Haeufige Fragen</div>
+  <div class="sec-sub"></div>
+  <div class="faq">
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Ist MarketLab eine Anlageberatung?</div><div class="faq-a">Nein. MarketLab ist ein Analyse- und Informationstool. Alle Signale und Empfehlungen sind datenbasiert, aber keine Finanzberatung. Investitionsentscheidungen triffst du selbst.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Woher kommen die Daten?</div><div class="faq-a">Wir nutzen institutionelle Datenquellen: Financial Modeling Prep fuer Kurse und Fundamentaldaten, NewsAPI fuer Nachrichten, und eigene AI-Modelle fuer Scoring und Signale.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Kann ich mein Depot verbinden?</div><div class="faq-a">Ja. Ueber Open Banking (PSD2) verbinden wir uns mit Trade Republic, Scalable Capital, DEGIRO und weiteren Brokern. Deine Daten bleiben verschluesselt und sicher.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Wie funktioniert der AI-Analyst?</div><div class="faq-a">Unser AI-Analyst basiert auf modernster KI-Technologie. Du kannst ihm Fragen in natuerlicher Sprache stellen — zum Beispiel "Vergleiche BMW vs Mercedes als Dividendenaktie" — und erhaeltst sofort eine datenbasierte Analyse.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Was ist der Portfolio X-Ray?</div><div class="faq-a">Portfolio X-Ray analysiert dein gesamtes Depot per AI: Klumpenrisiken, fehlende Diversifikation, Korrelationen zwischen deinen Aktien, und gibt dir konkrete Vorschlaege zur Optimierung. Das ist unser Premium-Feature.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Kann ich jederzeit kuendigen?</div><div class="faq-a">Ja. Monatlich kuendbar, keine Mindestlaufzeit, kein Kleingedrucktes. Du kannst dein Abo jederzeit in den Einstellungen stoppen.</div></div>
+    <div class="faq-item" onclick="this.classList.toggle('open')"><div class="faq-q">Welche Maerkte werden abgedeckt?</div><div class="faq-a">Aktuell: DAX 40, MDAX, Euro Stoxx 50. Geplant: S&P 500, NASDAQ, SMI, ATX. Waehrungsumrechnung in EUR, USD, CHF und GBP ist bereits integriert.</div></div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <h2>Bereit, schlauer zu investieren?</h2>
+  <p>Starte kostenlos. Kein Risiko. Keine Kreditkarte noetig.</p>
+  <button class="btn btn-p" onclick="openModal('signup')" style="background:var(--a)">Jetzt kostenlos starten</button>
+</section>
+
+<footer>
+  <p>MarketLab v1.0 — Keine Anlageberatung. Kapitalanlagen bergen Risiken einschliesslich Totalverlust.<br>
+  Alle Daten zu Informationszwecken. Stand: Maerz 2026.<br><br>
+  <a href="#features">Features</a> &middot; <a href="#pricing">Preise</a> &middot; <a href="#faq">FAQ</a> &middot; Datenschutz &middot; Impressum</p>
+</footer>
+
+<!-- AUTH MODAL -->
+<div class="modal-bg" id="modalBg" onclick="if(event.target===this)closeModal()">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<script>
+var FOX='https://raw.githubusercontent.com/thierrymatarework-cpu/investlab/main/fox.jpeg';
+var authMode='signup';
+
+function openModal(mode){
+  authMode=mode;
+  document.getElementById('modalBg').classList.add('on');
+  renderModal();
+}
+function closeModal(){document.getElementById('modalBg').classList.remove('on');}
+
+function renderModal(){
+  var m=document.getElementById('modalContent');
+  m.innerHTML='<button class="modal-close" onclick="closeModal()">&#10005;</button>'+
+  '<div style="text-align:center;margin-bottom:12px"><img src="'+FOX+'" style="width:44px;height:44px;border-radius:11px;object-fit:cover"></div>'+
+  '<h2 style="text-align:center">'+(authMode==='signup'?'Konto erstellen':'Willkommen zurueck')+'</h2>'+
+  '<p class="sub" style="text-align:center">'+(authMode==='signup'?'Kostenlos starten. Keine Kreditkarte.':'Melde dich an um fortzufahren.')+'</p>'+
+  '<button class="social-btn" onclick="goToApp()"><svg width="16" height="16" viewBox="0 0 24 24"><path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/><path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/><path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/><path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/></svg>Mit Google '+(authMode==='signup'?'registrieren':'anmelden')+'</button>'+
+  '<button class="social-btn" onclick="goToApp()">&#63743; Mit Apple '+(authMode==='signup'?'registrieren':'anmelden')+'</button>'+
+  '<div class="divider">oder mit E-Mail</div>'+
+  (authMode==='signup'?
+    '<input class="inp" placeholder="Dein Name" id="inp-name"><input class="inp" type="email" placeholder="E-Mail Adresse" id="inp-email"><input class="inp" type="password" placeholder="Passwort (min. 8 Zeichen)" id="inp-pw"><button class="btn btn-p" style="width:100%;margin-top:4px;padding:13px" onclick="goToApp()">Konto erstellen</button>'
+    :'<input class="inp" type="email" placeholder="E-Mail Adresse"><input class="inp" type="password" placeholder="Passwort"><button class="btn btn-p" style="width:100%;margin-top:4px;padding:13px" onclick="goToApp()">Anmelden</button>'
+  )+
+  '<p style="font-size:12px;color:var(--t3);text-align:center;margin-top:12px">'+
+  (authMode==='signup'?'Schon ein Konto? <span class="link" onclick="authMode=\'login\';renderModal()">Anmelden</span>':'Noch kein Konto? <span class="link" onclick="authMode=\'signup\';renderModal()">Registrieren</span>')+
+  '</p>';
+}
+
+function goToApp(){
+  window.location.href='app.html';
+}
+</script>
+</body>
+</html>
